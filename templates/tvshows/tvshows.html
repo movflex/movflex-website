@@ -1,0 +1,130 @@
+{% extends 'base.html'%}
+{% load static %}
+{% load widget_tweaks %}
+{% block title%} Tvshows {% endblock %}
+{% block content %}
+ <div class="ms_top_artist">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ms_heading">
+                            {% if LANGUAGE_CODE == 'en' %}
+                            <h1>Tvshows </h1>
+                            <a  class="ms_admin_name" id="cat" style="margin-right: 50px;" ><i class="fa fa-filter"></i> Filter </a>
+                            <ul class="pro_dropdown_menu" id="caty" style="margin-top: 5px;margin-right: 30px; max-width: 220px;">
+                            
+                            <form method="GET">
+                            <label style="font-size: 13px;margin-bottom: 8px;">Gener</label>
+                            {% render_field tvshowFilter.form.category class="form-control"%}
+                            <br>
+                            <label style="font-size: 13px;margin-bottom: 8px;">Channel</label>
+                            {% render_field tvshowFilter.form.channel class="form-control"%}
+                            <br>
+                            <label style="font-size: 13px;margin-bottom: 8px;">Year</label>
+                            {% render_field tvshowFilter.form.release_year class="form-control"%}
+                            <br>
+                            <label style="font-size: 13px;margin-bottom: 8px;">Langugae</label>
+                            {% render_field tvshowFilter.form.language class="form-control"%}
+                            <br>
+                            <input type="submit" value="Get" class="form-control" style="background-color: #252131; color: white;">
+                            </form>
+
+                            {% else %}
+                            <h1>المسلسلات </h1>
+                            <a  class="ms_admin_name" id="cat" style="margin-right: 50px;" ><i class="fa fa-filter"></i> تصفية </a>
+                            <ul class="pro_dropdown_menu" id="caty" style="margin-top: 5px;margin-right: 30px; max-width: 220px; direction: rtl;">
+                            
+                            <form method="GET">
+                            <label style="font-size: 13px;margin-bottom: 8px;">الفئة</label>
+                            {% render_field tvshowFilter.form.category class="form-control"%}
+                            <br>
+                            <label style="font-size: 13px;margin-bottom: 8px;">المنصة</label>
+                            {% render_field tvshowFilter.form.channel class="form-control"%}
+                            <br>
+                            <label style="font-size: 13px;margin-bottom: 8px;">السنة</label>
+                            {% render_field tvshowFilter.form.release_year class="form-control"%}
+                            <br>
+                            <label style="font-size: 13px;margin-bottom: 8px;">اللغة</label>
+                            {% render_field tvshowFilter.form.language class="form-control"%}
+                            <br>
+                            <input type="submit" value="اجلب" class="form-control" style="background-color: #252131; color: white;">
+                            </form>
+
+                            {% endif %}
+						</ul>
+                            </div>
+                        </div>
+{% for tv in tvshows %}         
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-6 ">
+                            <div class="ms_rcnt_box marger_bottom30">
+                                {% if tv.coming_soon == True  %} 
+                                <h2 class="imbd" style="background:#F8CC2F">soon</h2>
+                                {% else %}
+                                <h2 class="imbd" style="background:#3A5A81">{{tv.imbd}} <i class="fa fa-star"  ></i> </h2>
+                                {% endif %}
+                        
+                                <div class="ms_rcnt_box_img">
+                                    <img src="{{tv.poster.url}}" alt="" class="img-fluid">
+                                    <div class="ms_main_overlay">
+                                        <div class="ms_box_overlay"></div>
+                                        
+                                        <div class="ms_play_icon">
+                                            <a href="{% url 'tvshow' tv_slug=tv.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{tv.category}}</h1>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="ms_rcnt_box_text">
+                                
+                                <h3><a href="{% url 'tvshow' tv_slug=tv.slug %}">{{tv.name}} {{tv.season}} , {{tv.release_year}}</a></h3>
+                                {% if LANGUAGE_CODE == 'en' %}
+                                <h1>{{tv.category}} , {{tv.channel}}</h1>
+                                {% else %}
+                                <h1> {{tv.channel}} , {{tv.category.name_ar}} </h1>
+                                {% endif %}
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+{% empty %}
+{% if LANGUAGE_CODE == 'en' %}
+<h4 class="alarm"> No Tvshows found <a href="{% url 'tvshows'%}" class="text-dark"> See All Tvshows </a>
+</h4>
+{% else %}
+<h4 class="alarm"> لم يتم العثور على مسلسلات   <a href="{% url 'tvshows'%}" class="text-dark"> مشاهدة كل المسلسلات </a> </h4>
+
+{% endif %}
+{% endfor %}
+                        
+                    </div>
+
+                </div>
+                
+            </div>
+    {% if tvshows.has_other_pages %}
+    <div class="pagination p12">
+        <ul>
+            {% if tvshows.has_previous %}
+                <a href="?{{ request.GET.urlencode}}&page={{tvshows.previous_page_number}}"><li><i class="fa fa-arrow-left"></i></li></a>
+            {% endif %}
+
+            {% for i in tvshows.paginator.page_range %}
+            
+            {% if tvshows.number == i  %}
+            <a class="is-active" href="?page={{i}}"><li>{{i}}</li></a>
+            {% else %}
+            <a href="?{{ request.GET.urlencode}}&page={{i}}"><li>{{i}}</li></a>
+            {% endif %}
+            
+            {% endfor %}
+
+            {% if tvshows.has_next %}
+                <a href="?{{ request.GET.urlencode}}&page={{tvshows.next_page_number}}"><li><i class="fa fa-arrow-right"></i></li></a>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+          	
+{% endblock content %}

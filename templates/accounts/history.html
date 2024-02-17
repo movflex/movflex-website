@@ -1,0 +1,116 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block title%} History {% endblock %}
+{% block content %}
+
+             <div class="ms_top_artist">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ms_heading">
+                            {% if LANGUAGE_CODE == 'en' %}
+                            <h1>History </h1>
+                            <span class="hstry_clear ms_btn"><a href="{% url 'clear_history' %}">clear History</a></span>
+                            {% else %}
+                            <h1>الســجل </h1>
+                            <span class="hstry_clear ms_btn"><a href="{% url 'clear_history' %}">ازالة الســجل</a></span>
+                            {% endif %}
+                                
+                    
+                            </div>
+                            
+                        </div>
+                        {% if request.user.is_authenticated %}
+                        {% for his in history %}         
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                            <div class="ms_rcnt_box marger_bottom30">
+                                {% if his.typee == 'Movies' %}
+                                <h2 class="imbd" style="background:#D31336">{{his.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% else %} 
+                                <h2 class="imbd" style="background:#3A5A81">{{his.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% endif %}
+                                <div class="ms_rcnt_box_img">
+                                    <img src="{{his.poster.url}}" alt="" class="img-fluid">
+                                    <div class="ms_main_overlay">
+                                        <div class="ms_box_overlay"></div>
+                                        <div class="ms_more_icon">
+                                            <img src="{% static 'images/svg/more.svg'%}" alt="">
+                                        </div>
+                                        <ul class="more_option">
+                                        {% if LANGUAGE_CODE == 'en' %}
+                                        {% if his.typee == 'Movies' %}
+                                        <li><a href="{% url 'del_movie_history' mov_id=his.id%}"><span class="opt_icon"></span>Remove</a></li>
+                                        {% else %}
+                                        <li><a href="{% url 'del_tvshow_history' tv_id=his.id%}"><span class="opt_icon"></span>Remove</a></li>
+                                        {% endif %}
+                                        
+                                        {% else %}
+                                        {% if his.typee == 'Movies' %}
+                                        <li><a href="{% url 'del_movie_history' mov_id=his.id%}"><span class="opt_icon"></span>ازالة</a></li>
+                                        {% else %}
+                                        <li><a href="{% url 'del_tvshow_history' tv_id=his.id%}"><span class="opt_icon"></span>ازالة</a></li>
+                                        {% endif %}
+                                        {% endif %}
+                                            
+                                        </ul>
+                                        <div class="ms_play_icon">
+                                        {% if his.typee == 'Movies' %}
+                                            <a href="{% url 'movie' mov_slug=his.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{his.typee}}</h1>
+                                        {% else %} 
+                                            <a href="{% url 'tvshow' tv_slug=his.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{his.typee}}</h1>   
+                                        {% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="ms_rcnt_box_text">
+                                {%if his.season == 1%}
+                                {% if his.typee == 'Movies' %}
+                                <h3><a href="{% url 'movie' mov_slug=his.slug %}">{{his.name}} {{his.season}} , {{his.release_year}}</a></h3>
+                                {% else %}
+                                <h3><a href="{% url 'tvshow' tv_slug=his.slug %}">{{his.name}} {{his.season}} , {{his.release_year}}</a></h3>
+                                {% endif %}
+                                    
+                                {%else%}
+                                {% if his.typee == 'Movies' %}
+                                <h3><a href="{% url 'movie' mov_slug=his.slug %}">{{his.name}} {{his.season}} , {{his.release_year}}</a></h3>
+                                {% else %}
+                                <h3><a href="{% url 'tvshow' tv_slug=his.slug %}">{{his.name}} {{his.season}} , {{his.release_year}}</a></h3>
+                                {% endif %}
+                                {%endif %}
+                                {% if LANGUAGE_CODE == 'en' %}
+                                <h1>{{his.category}} , {{his.channel}}</h1>
+                                {% else %}
+                                <h1> {{his.channel}} , {{his.category.name_ar}} </h1>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+{% empty %}
+{% if LANGUAGE_CODE == 'en' %}
+<h4 class="alarm"> history is empty </h4>
+{% else %}
+<h4 class="alarm">الســجل فارغ </h4>
+{% endif %}
+
+
+{% endfor %}
+{% else %}
+{% if LANGUAGE_CODE == 'en' %}
+<h4 class="alarm"> You are not logged in  <a href="{% url 'login' %}?next_page={{ request.path|urlencode}}" class="text-dark"> Login </a></h4>
+{% else %}
+<h4 class="alarm"> يجب عليك تسجيل الدخول <a href="{% url 'login' %}?next_page={{ request.path|urlencode}}" class="text-dark"> تسجيل الدخول  </a></h4>
+{% endif %}
+{% endif %}
+                        
+                        
+                    </div>
+                </div>
+            </div>
+          	
+        
+        
+{% endblock content %}

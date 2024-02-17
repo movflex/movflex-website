@@ -1,0 +1,116 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block title%} Favourites {% endblock %}
+{% block content %}
+
+             <div class="ms_top_artist">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ms_heading">
+                            {% if LANGUAGE_CODE == 'en' %}
+                            <h1>Favourites </h1>
+                            {% else %}
+                            <h1>المفضلة </h1>
+                            {% endif %}
+                                
+                    
+                            </div>
+                            
+                        </div>
+                        {% if request.user.is_authenticated %}
+                        {% for fav in favourits %}         
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                            <div class="ms_rcnt_box marger_bottom30">
+                                {% if fav.typee == 'Movies' and fav.coming_soon == False %}
+                                <h2 class="imbd" style="background:#D31336">{{fav.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% elif fav.coming_soon == True  %} 
+                                <h2 class="imbd" style="background:#F8CC2F">soon</h2>
+                                {% else %} 
+                                <h2 class="imbd" style="background:#3A5A81">{{fav.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% endif %}
+                                <div class="ms_rcnt_box_img">
+                                    <img src="{{fav.poster.url}}" alt="" class="img-fluid">
+                                    <div class="ms_main_overlay">
+                                        <div class="ms_box_overlay"></div>
+                                        <div class="ms_more_icon">
+                                            <img src="{% static 'images/svg/more.svg'%}" alt="">
+                                        </div>
+                                        <ul class="more_option">
+                                        {% if LANGUAGE_CODE == 'en' %}
+                                        {% if fav.typee == 'Movies' %}
+                                        <li><a href="{% url 'del_movie_favourits' mov_id=fav.id%}"><span class="opt_icon"></span>Remove</a></li>
+                                        {% else %}
+                                        <li><a href="{% url 'del_tvshow_favourits' tv_id=fav.id%}"><span class="opt_icon"></span>Remove</a></li>
+                                        {% endif %}
+                                        
+                                        {% else %}
+                                        {% if fav.typee == 'Movies' %}
+                                        <li><a href="{% url 'del_movie_favourits' mov_id=fav.id%}"><span class="opt_icon"></span>ازالة</a></li>
+                                        {% else %}
+                                        <li><a href="{% url 'del_tvshow_favourits' tv_id=fav.id%}"><span class="opt_icon"></span>ازالة</a></li>
+                                        {% endif %}
+                                        {% endif %}
+                                            
+                                        </ul>
+                                        <div class="ms_play_icon">
+                                        {% if fav.typee == 'Movies' %}
+                                            <a href="{% url 'movie' mov_slug=fav.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{fav.typee}}</h1>
+                                        {% else %} 
+                                            <a href="{% url 'tvshow' tv_slug=fav.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{fav.typee}}</h1>   
+                                        {% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="ms_rcnt_box_text">
+                                {%if fav.season == 1%}
+                                {% if fav.typee == 'Movies' %}
+                                <h3><a href="{% url 'movie' mov_slug=fav.slug %}">{{fav.name}} {{fav.season}} , {{fav.release_year}}</a></h3>
+                                {% else %}
+                                <h3><a href="{% url 'tvshow' tv_slug=fav.slug %}">{{fav.name}} {{fav.season}} , {{fav.release_year}}</a></h3>
+                                {% endif %}
+                                    
+                                {%else%}
+                                {% if fav.typee == 'Movies' %}
+                                <h3><a href="{% url 'movie' mov_slug=fav.slug %}">{{fav.name}} {{fav.season}} , {{fav.release_year}}</a></h3>
+                                {% else %}
+                                <h3><a href="{% url 'tvshow' tv_slug=fav.slug %}">{{fav.name}} {{fav.season}} , {{fav.release_year}}</a></h3>
+                                {% endif %}
+                                {%endif %}
+                                {% if LANGUAGE_CODE == 'en' %}
+                                <h1>{{fav.category}} , {{fav.channel}}</h1>
+                                {% else %}
+                                <h1> {{fav.channel}} , {{fav.category.name_ar}} </h1>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+{% empty %}
+{% if LANGUAGE_CODE == 'en' %}
+<h4 class="alarm"> Favourites list is empty </h4>
+{% else %}
+<h4 class="alarm"> قائمة المفضلة فارغة </h4>
+{% endif %}
+
+
+{% endfor %}
+{% else %}
+{% if LANGUAGE_CODE == 'en' %}
+<h4 class="alarm"> You are not logged in  <a href="{% url 'login' %}?next_page={{ request.path|urlencode}}" class="text-dark"> Login </a></h4>
+{% else %}
+<h4 class="alarm"> يجب عليك تسجيل الدخول <a href="{% url 'login' %}?next_page={{ request.path|urlencode}}" class="text-dark"> تسجيل الدخول  </a></h4>
+{% endif %}
+{% endif %}
+                        
+                        
+                    </div>
+                </div>
+            </div>
+          	
+        
+        
+{% endblock content %}

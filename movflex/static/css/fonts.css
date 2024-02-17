@@ -1,0 +1,89 @@
+
+/*-----------------------Custom Fonts For English language-------------------------*/
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 100;
+  src: url(../fonts/JosefinSans-Thin.eot);
+  src: url(../fonts/JosefinSans-Thin.woff) format('woff'),
+       url(../fonts/JosefinSans-Thin.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: url(../fonts/JosefinSans-Light.eot);
+  src: url(../fonts/JosefinSans-Light.woff) format('woff'),
+       url(../fonts/JosefinSans-Light.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fonts/JosefinSans-Regular.eot);
+  src: url(../fonts/JosefinSans-Regular.woff) format('woff'),
+       url(../fonts/JosefinSans-Regular.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url(../fonts/JosefinSans-SemiBold.eot);
+  src: url(../fonts/JosefinSans-SemiBold.woff) format('woff'),
+       url(../fonts/JosefinSans-SemiBold.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url(../fonts/JosefinSans-Bold.eot);
+  src: url(../fonts/JosefinSans-Bold.woff) format('woff'),
+       url(../fonts/JosefinSans-Bold.woff2) format('woff2');
+}
+
+/*-----------------------Custom Fonts For English language-------------------------*/
+/* @font-face {
+  font-family: 'Lemonada';
+  font-weight: normal;
+  font-style: normal;
+  src: url(../fonts/Lemonada-Regular.eot);
+  src:url(../fonts/Lemonada-Regular.woff2) format('woff2'),
+      url(../fonts/Lemonada-Regular.woff) format('woff'),
+      url(../fonts/Lemonada-Regular.ttf) format('truetype');
+  
+} */
+
+@font-face {
+  font-family: 'Lemonada';
+  font-weight: 300;
+  font-style: normal;
+  src: url(../fonts/Lemonada-Light.eot);
+  src:url(../fonts/Lemonada-Light.woff2) format('woff2'),
+      url(../fonts/Lemonada-Light.woff) format('woff'),
+      url(../fonts/Lemonada-Light.ttf) format('truetype');
+  
+}
+
+/* @font-face {
+  font-family: 'Lemonada';
+  font-weight: bold;
+  font-style: normal;
+  src: url(../fonts/Lemonada-Bold.eot);
+  src:url(../fonts/Lemonada-Bold.woff2) format('woff2'),
+      url(../fonts/Lemonada-Bold.woff) format('woff'),
+      url(../fonts/Lemonada-Bold.ttf) format('truetype');
+  
+} */
+
+/* @font-face {
+  font-family: 'Lemonada';
+  font-weight: 600;
+  font-style: normal;
+  src: url(../fonts/Lemonada-SemiBold.eot);
+  src:url(../fonts/Lemonada-SemiBold.woff2) format('woff2'),
+      url(../fonts/Lemonada-SemiBold.woff) format('woff'),
+      url(../fonts/Lemonada-SemiBold.ttf) format('truetype');
+  
+} */
+

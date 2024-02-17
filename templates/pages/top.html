@@ -1,0 +1,459 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block title%} Top rank {% endblock %}
+{% block content %}
+
+<div class="ms_content_wrapper ms_album_content">
+     
+        <div class="ms_free_download">
+            {% if LANGUAGE_CODE == 'en' %}
+            <div class="ms_heading">
+                    <h1>Statistics</h1>
+                </div>
+				<div class="album_inner_list">
+					<div class="album_list_wrapper">
+                        <div class="row">
+                        <div class="col-md-3 chart">
+                        <canvas id="count-chart" width="400" height="100px"></canvas>
+                        <h2 class="stc">Statistics of Movies & Tvshows </h2>
+                        </div>
+                        <div class="col-md-3 chart">
+                        <canvas id="gener-chart" width="400" height="341px"></canvas>
+                        <h2 class="stc" style="margin-top: 47px;">Statistics of Geners </h2>
+                        </div>
+                        <div class="col-md-3 chart">
+                        <canvas id="year-chart" width="400" height="341px"></canvas>
+                        <h2 class="stc" style="margin-top: 47px;">Statistics of Years </h2>
+                        </div>
+                        <div class="col-md-3 chart">
+                        <canvas id="channel-chart" width="400" height="341px"></canvas>
+                        <h2 class="stc" style="margin-top: 47px;">Statistics of Channels </h2>
+                        </div>
+                        </div>
+						
+						
+						
+					</div>
+				</div>
+            {% else %}
+            <div class="ms_heading">
+                    <h1>الاحصائيات</h1>
+                </div>
+				<div class="album_inner_list">
+					<div class="album_list_wrapper">
+                        <div class="row">
+                        <div class="col-md-3 chart">
+                        <canvas id="count-chart" width="400" height="100px"></canvas>
+                        <h2 class="stc">احصائيات الافلام و المسلسلات  </h2>
+                        </div>
+                        <div class="col-md-3 chart">
+                        <canvas id="gener-chart" width="400" height="341px"></canvas>
+                        <h2 class="stc" style="margin-top: 47px;">احصائيات الفئات </h2>
+                        </div>
+                        <div class="col-md-3 chart">
+                        <canvas id="year-chart" width="400" height="341px"></canvas>
+                        <h2 class="stc" style="margin-top: 47px;">احصائيات السنوات  </h2>
+                        </div>
+                        <div class="col-md-3 chart">
+                        <canvas id="channel-chart" width="400" height="341px"></canvas>
+                        <h2 class="stc" style="margin-top: 47px;">احصائيات المنصات </h2>
+                        </div>
+                        </div>
+						
+						
+						
+					</div>
+				</div>
+            {% endif %}
+                    
+				
+        </div>
+
+
+        <!----Free Download Css Start---->
+            <div class="ms_free_download">
+                {% if LANGUAGE_CODE == 'en' %}
+                <div class="row" style="margin-bottom: 10px;direction: rtl;">
+                <div class="option col-md-6" style="top: -17px;direction: ltr;">
+                <form method="GET" action="{% url 'Get_top'%}">
+                    <div class="row">
+                    <div class="form-group col-md-5">
+                        <label style="    font-size: 13px;">Type</label>
+                        <select class="form-option" name="typee" value="HI">
+                        <option value="1">Movie </option>
+                        <option value="2">Tvshow</option>
+                    </select>
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label style="    font-size: 13px;">Year</label>
+                        <select class="form-option" name="year">
+                        {% for re in release %}
+                        <option value="{{re.id}}">{{re.year}}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                    <input Type="submit" class="btn-option col-md-2" value="Get">
+                </div>
+                </form>    
+                </div>
+            </div>
+            <div class="ms_heading">
+                <h1>Top rank</h1>
+            </div>
+				<div class="album_inner_list">
+					<div class="album_list_wrapper">
+						<ul class="album_list_name">
+							<li style="width: 56px;">#</li>
+                            <li>poster</li>
+							<li>Title</li>
+                            <li class="text-center">IMDB rating</li>
+							<li class="text-center">release year</li>
+							<li class="text-center">channel</li>
+                            <li class="text-center">number of views </li>
+							<li class="text-center">gross</li>
+						</ul>
+                {% else %}
+                <div class="row" style="margin-bottom: 10px;direction: rtl;">
+                    
+                    <div class="option col-md-6" style="top: -17px;">
+                    <form method="GET" action="{% url 'Get_top'%}">
+                        <div class="row">
+                        <div class="form-group col-md-5">
+                            <label>النوع</label>
+                            <select class="form-option" name="typee" value="HI">
+                            <option value="1">افلام </option>
+                            <option value="2">مسلسلات</option>
+                        </select>
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label>السنة</label>
+                            <select class="form-option" name="year">
+                            {% for re in release %}
+                            <option value="{{re.id}}">{{re.year}}</option>
+                            {% endfor %}
+                        </select>
+                        </div>
+                        <input Type="submit" class="btn-option col-md-2" value="ابحث">
+                    </div>
+                    </form>    
+                    </div>
+                    
+                </div>
+                <div class="ms_heading col-md-6">
+                    <h1>الافضل</h1>
+                    {% comment %} <button onclick="toggleTops('Movies')">Movies</button>
+                    <button onclick="toggleTops('Tvshows')">Tvshows</button> {% endcomment %}
+                </div>
+				<div class="album_inner_list">
+					<div class="album_list_wrapper">
+						<ul class="album_list_name">
+							<li style="width: 56px;">#</li>
+                            <li>المنشور</li>
+							<li>الاسم</li>
+                            <li class="text-center">IMDB تقييم</li>
+							<li class="text-center">سنة الاصدار</li>
+							<li class="text-center">المنصة</li>
+                            <li class="text-center">عدد المشاهدات</li>
+							<li class="text-center">الارباح</li>
+						</ul>
+                {% endif %}
+                {% for top in tops|slice:':100' %}
+						<ul style="height: 100px;" data-type="{{ top.typee }}">
+							<li style="width: 56px; color: #fff;">{{forloop.counter}}</li>
+							{% if top.typee == 'Movies' %}
+                            <li><a href="{% url 'movie' mov_slug=top.slug %}"><span class="ms_close"><img src="{{top.poster.url}}" style="width: 80px; height: 80px;border: 6px #D31633 solid;border-radius: 5px;"></span></a></li>
+                            <li><a href="{% url 'movie' mov_slug=top.slug %}">{{top.name}} {{top.season}}</a></li>
+                            {% else %}
+                            <li><a href="{% url 'tvshow' tv_slug=top.slug %}"><span class="ms_close"><img src="{{top.poster.url}}" style="width: 80px; height: 80px;border: 6px #3A5A81 solid;border-radius: 5px;"></span></a></li>
+                            <li><a href="{% url 'tvshow' tv_slug=top.slug %}">{{top.name}} {{top.season}}</a></li>
+                            {% endif %}
+							<li class="text-center data">{{top.imbd}}</li>
+							<li class="text-center data">{{top.release_year}}</li>
+							<li class="text-center "><a href="{% url 'channel' chan_slug=top.channel.slug%}">{{top.channel}}</a></li>
+                            <li class="text-center data">{{top.number_views}}</li>
+                            <li class="text-center data">{{top.gross}} $</li>
+							
+						</ul>
+				{% endfor %}
+						
+					</div>
+				</div>
+				
+            </div>
+            
+            <!----Main div close---->
+        </div>
+<script>
+function toggleTops(type){
+    var tops = document.querySelectorAll('ul');
+    for(var i=0;i<tops.length;i++){
+        if(tops[i].dataset.type === type){
+            tops[i].style.display = 'block';
+        }else{
+            tops[i].style.display = 'none';
+        }
+    }
+}
+</script>
+<script>
+function colorItems(tooltipItem){
+    console.log(tooltipItem.tooltip.labelColors[0].borderColor);
+    const tooltipBackgroundColor = tooltipItem.tooltip.labelColors[0].borderColor
+
+    return tooltipBackgroundColor;
+}
+var ctx = document.getElementById('count-chart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: [{% if LANGUAGE_CODE == 'en' %}
+                    'Movies','Tvshows'
+                    {% else %}
+                    'الافلام','المسلسلات'
+                    {% endif %}],
+        datasets: [{
+            label: '',
+            data: [{{Mcount}} , {{Tvcount}}],
+            backgroundColor: [
+                '#D31336',
+                '#3A5A81',
+                
+            ],
+            borderColor: [
+                '#D31336',
+                '#3A5A81',
+
+            ],
+            
+            borderWidth: 2
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+        plugins:{
+            tooltip:{
+                displayColors: false,
+                xAlign: 'left',
+                backgroundColor: colorItems
+            }
+        }
+    }
+});
+</script>
+
+<script>
+function colorItems(tooltipItem){
+    console.log(tooltipItem.tooltip.labelColors[0].borderColor);
+    const tooltipBackgroundColor = tooltipItem.tooltip.labelColors[0].borderColor
+
+    return tooltipBackgroundColor;
+}
+var ctx = document.getElementById('gener-chart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for cat in category %} '{{cat.name}}',{% endfor %}],
+        datasets: [{
+            {% if LANGUAGE_CODE == 'en' %}
+            label: 'Movies', 
+            {% else %}
+            label: 'الافلام', 
+            {% endif %}
+            
+            data: [{% for cat in category %} '{{cat.movie_count}}',{% endfor %}],
+            backgroundColor: [
+                '#D31336',
+                
+            ],
+            borderColor: [
+                '#D31336',
+                
+
+            ],
+            borderWidth: 2
+
+        },
+        {
+            {% if LANGUAGE_CODE == 'en' %}
+            label: 'Tvshows', 
+            {% else %}
+            label: 'المسلسلات', 
+            {% endif %} 
+            data: [{% for cat in category %} '{{cat.tvshow_count}}',{% endfor %}],
+            backgroundColor: [
+                '#3A5A81',
+                
+                
+            ],
+            borderColor: [
+                '#3A5A81',
+            ],
+            borderWidth: 2
+            
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+        plugins:{
+            tooltip:{
+                displayColors: false,
+                yAlign: 'bottom',
+                backgroundColor: colorItems
+            }
+        }
+    }
+});
+</script>
+
+<script>
+function colorItems(tooltipItem){
+    console.log(tooltipItem.tooltip.labelColors[0].borderColor);
+    const tooltipBackgroundColor = tooltipItem.tooltip.labelColors[0].borderColor
+
+    return tooltipBackgroundColor;
+}
+var ctx = document.getElementById('year-chart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [{% for year in years %} '{{year.year}}',{% endfor %}],
+        datasets: [{
+            {% if LANGUAGE_CODE == 'en' %}
+            label: 'Movies', 
+            {% else %}
+            label: 'الافلام', 
+            {% endif %}
+            data: [ {% for year in years %} '{{year.movie_count}}',{% endfor %}],
+            backgroundColor: [
+                '#D31336',
+                
+            ],
+            borderColor: [
+                '#D31336',
+                
+
+            ],
+            tension: 0.5
+
+        },
+        {
+            {% if LANGUAGE_CODE == 'en' %}
+            label: 'Tvshows', 
+            {% else %}
+            label: 'المسلسلات', 
+            {% endif %} 
+            data: [{% for year in years %} '{{year.tvshow_count}}',{% endfor %}],
+            backgroundColor: [
+                '#3A5A81',
+                
+            ],
+            borderColor: [
+                '#3A5A81',
+            ],
+            tension: 0.5
+
+            
+        }]
+    },
+    
+    options: {
+        scales: {
+            y: [ {
+                type: 'linear',
+                position: 'left',
+                id: 'movie_count',
+                min: {% if years%}
+                    {{ years.0.movie_count }}
+                    {% else %}0{% endif %},
+            },
+            {
+                type: 'linear',
+                position: 'right',
+                id: 'tvshow_count',
+                min: {% if years%}
+                    {{ years.0.tvshow_count }}
+                    {% else %}0{% endif %},
+            }
+            ],
+        },
+        plugins:{
+            tooltip:{
+                displayColors: false,
+                yAlign: 'bottom',
+                backgroundColor: colorItems
+            }
+        }
+    }
+});
+</script>
+<script>
+function colorItems(tooltipItem){
+    console.log(tooltipItem.tooltip.labelColors[0].borderColor);
+    const tooltipBackgroundColor = tooltipItem.tooltip.labelColors[0].borderColor
+
+    return tooltipBackgroundColor;
+}
+var ctx = document.getElementById('channel-chart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for chan in channels %} '{{chan.name}}',{% endfor %}],
+        datasets: [{
+            {% if LANGUAGE_CODE == 'en' %}
+            label: 'Movies', 
+            {% else %}
+            label: 'الافلام', 
+            {% endif %}
+            data: [ {% for chan in channels %} '{{chan.movie_count}}',{% endfor %}],
+            backgroundColor: [
+                '#D31336',
+                
+            ],
+            borderColor: [
+                '#D31336',
+                
+
+            ],
+            borderWidth: 2
+
+        },
+        {
+            {% if LANGUAGE_CODE == 'en' %}
+            label: 'Tvshows', 
+            {% else %}
+            label: 'المسلسلات', 
+            {% endif %} 
+            data: [{% for chan in channels %} '{{chan.tvshow_count}}',{% endfor %}],
+            backgroundColor: [
+                '#3A5A81',
+                
+                
+            ],
+            borderColor: [
+                '#3A5A81',
+            ],
+            borderWidth: 2
+            
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        plugins:{
+            tooltip:{
+                displayColors: false,
+                xAlign: 'left',
+                backgroundColor: colorItems
+            }
+        }
+    }
+});
+</script>
+{% endblock content %}

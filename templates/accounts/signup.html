@@ -1,0 +1,153 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block title%} Signup {% endblock %}
+{% block content %}
+        <div class="modal-content" >
+                    
+                    <div class="modal-body">
+                        <div class="ms_register_img">
+                            <img src="{% static 'images/sign up.png' %}" alt="" class="img-fluid" style="margin-top:50px; height: 100%;"/>
+                            {% if LANGUAGE_CODE == 'en' %}
+                            <h2 class="join_us">Join Us Now </h2>
+                            {% else %}
+                            <h2 class="join_us">انضم الينا الان</h2>
+                            {% endif %}
+                            
+                        </div>
+                        <div class="ms_register_form" style="background: url(/static/images/signup.png);">
+                            {% if LANGUAGE_CODE == 'en' %}
+                            <h2>Register / Sign Up</h2>
+                            {% else %}
+                            <h2>انشاء حساب</h2>
+                            {% endif %}
+                            
+                                {% include  'parts/alerts.html'%}
+
+                            {% if is_added == True %}
+                            <form method="POST" style="display:none;">
+                            {% else %}
+                            <form method="POST" class="frm_reg">
+                            {% endif %}
+                              {% csrf_token %}
+                            {% if LANGUAGE_CODE == 'en' %}
+                            <div class="form-group">
+                                    <input type="text" placeholder="Enter Your First-Name" name="fname" value="{{fname}}" class="form-control">
+                                    <span class="form_icon">
+                                <i class="fa_icon " aria-hidden="true"></i>
+                                </span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" placeholder="Enter Your Last-Name" name="lname" value="{{lname}}" class="form-control">
+                                    <span class="form_icon">
+                                <i class="fa_icon " aria-hidden="true"></i>
+                                </span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" placeholder="Enter Your Email" name="email" value="{{email}}" class="form-control">
+                                    <span class="form_icon">
+                                <i class="fa_icon form-envelope" aria-hidden="true"></i>
+                                </span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" placeholder="Enter UserName" name="user"  class="form-control">
+                                    <span class="form_icon">
+                                <i class="fa_icon form-user" aria-hidden="true"></i>
+                                </span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" placeholder="Enter Password" name="pass"  class="form-control">
+                                    <span class="form_icon">
+                             <i class=" fa_icon form-lock" aria-hidden="true"></i>
+                             </span>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control" name="cat">
+                                        <option value="" disabled selected>Choose favorit gener</option>
+                                        {% for cat in category %}
+                                        <option value="{{cat.id}}">{{cat.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </span>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control" name="safe_q">
+                                        <option value="" disabled selected>Choose securty quesdtion</option>
+                                        {% for safe in questions %}
+                                        <option value="{{safe.id}}">{{safe.name}}</option>
+                                        {% endfor %}
+                                        
+                                        
+                                    </select>
+                                    
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" placeholder="Enter Securty answer" name="safe_an"  class="form-control">
+                                </div>
+                                <input type="hidden" name="next_page" value="{{ request.GET.next_page }}">
+                                <button type="submit" class="ms_btn" style="background-color: #14182a;">register now</button>
+                                <p>Already Have An Account? <a href="{% url 'login' %}?next_page={{ request.GET.next_page }}" class="ms_modal hideCurrentModel"><br>login here</a></p>
+                            
+                            {% else %}
+                            <div class="form-group">
+                                    <input type="text" placeholder="ادخل اسمك الاول" name="fname" value="{{fname}}" class="form-control">
+                                    <span class="form_icon">
+                                <i class="fa_icon " aria-hidden="true"></i>
+                                </span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" placeholder="ادخل اسمك الاخير" name="lname" value="{{lname}}" class="form-control">
+                                    <span class="form_icon">
+                                <i class="fa_icon " aria-hidden="true"></i>
+                                </span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" placeholder="ادخل بريدك الالكتروني" name="email" value="{{email}}" class="form-control">
+                                    <span class="form_icon">
+                                <i class="fa_icon form-envelope" aria-hidden="true"></i>
+                                </span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" placeholder="ادخل اسم المستخدم" name="user"  class="form-control">
+                                    <span class="form_icon">
+                                <i class="fa_icon form-user" aria-hidden="true"></i>
+                                </span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" placeholder="ادخل كلمة المرور" name="pass"  class="form-control">
+                                    <span class="form_icon">
+                             <i class=" fa_icon form-lock" aria-hidden="true"></i>
+                             </span>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control" name="cat">
+                                        <option value="" disabled selected>اختر التصنيف المفضل</option>
+                                        {% for cat in category %}
+                                        <option value="{{cat.id}}">{{cat.name_ar}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control" name="safe_q">
+                                        <option value="" disabled selected>اختر سؤال الامان</option>
+                                        {% for safe in questions %}
+                                        <option value="{{safe.id}}">{{safe.name_ar}}</option>
+                                        {% endfor %}
+                                        
+                                    </select>
+                                    
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" placeholder="ادخل اجابة سؤال الامان" name="safe_an"  class="form-control">
+                                </div>
+                                <input type="hidden" name="next_page" value="{{ request.GET.next_page }}">
+                                <button type="submit" class="ms_btn" style="background-color: #14182a;">انشاء حساب</button>
+                                <p>يوجد لدي حساب بالفعل <a href="{% url 'login' %}?next_page={{ request.GET.next_page }}" class="ms_modal hideCurrentModel"><br>تسجيل الدخول</a></p>
+                            
+                            {% endif %}
+                                </form> 
+                        </div>
+                    </div>
+                </div>
+    
+{% endblock content %}

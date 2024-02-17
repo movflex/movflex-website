@@ -1,0 +1,78 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block title%} Search {% endblock %}
+{% block content %}
+
+<div class="ms_top_artist">
+    {% if LANGUAGE_CODE == 'en' %}
+    <h4 class="search_result"> Search results of <span style="color:#D31336; display: block; margin-top: 20px;"> ' {{searchfiled}} '</span></h4>
+    {% else %}
+    <h4 class="search_result"> نتائج البحث عن <span style="color:#D31336; display: block; margin-top: 20px;"> ' {{searchfiled}} '</span> </h4>
+    {% endif %}
+ 
+                <div class="container">
+                    <div class="row">
+                    
+    {% for search in search_result %}       
+   
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                            <div class="ms_rcnt_box marger_bottom30">
+                                {% if search.typee == 'Movies' and search.coming_soon == False %}
+                                <h2 class="imbd" style="background:#D31336">{{search.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% elif search.coming_soon == True  %} 
+                                <h2 class="imbd" style="background:#F8CC2F">soon</h2>
+                                {% else %}
+                                <h2 class="imbd" style="background:#3A5A81">{{search.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% endif %}
+                                
+                                <div class="ms_rcnt_box_img">
+                                    <img src="{{search.poster.url}}" alt="" class="img-fluid">
+                                    <div class="ms_main_overlay">
+                                        <div class="ms_box_overlay"></div>
+                                        
+                                        <div class="ms_play_icon">
+                                        {% if search.typee == 'Movies' %}
+                                            <a href="{% url 'movie' mov_slug=search.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{search.typee}}</h1>
+                                        {% else %} 
+                                            <a href="{% url 'tvshow' tv_slug=search.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{search.typee}}</h1>   
+                                        {% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="ms_rcnt_box_text">
+                                
+                                {% if search.typee == 'Movies' %}
+                                <h3><a href="{% url 'movie' mov_slug=search.slug %}">{{search.name}} {{search.season}} , {{search.release_year}}</a></h3>
+                                {% else %}
+                                <h3><a href="{% url 'tvshow' tv_slug=search.slug %}">{{search.name}} {{search.season}} , {{search.release_year}}</a></h3>
+                                {% endif %}
+                                
+                                {% if LANGUAGE_CODE == 'en' %}
+                                <h1>{{search.category}} , {{search.channel}}</h1>
+                                {% else %}
+                                <h1> {{search.channel}} , {{search.category.name_ar}} </h1>
+                                {% endif %}
+                                
+                                </div>
+                            </div>
+                        </div>
+
+    {% empty %}
+    {% if LANGUAGE_CODE == 'en' %}
+    <h4 class="alarm"> No thing found </h4>
+   
+    {% else %}
+    <h4 class="alarm"> لم يتم العثور على نتائج </h4>
+    {% endif %}
+
+
+    {% endfor %}
+                        
+            </div>
+        </div>
+    </div>
+          	
+{% endblock content %}

@@ -1,0 +1,135 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block title%} {{show.name}} {% endblock %}
+{% block content %}
+<div class="ms_album_single_wrapper">
+            <div class="album_single_data">
+                {% if LANGUAGE_CODE == 'en' %}
+                <div class="album_single_img">
+                    <img src="{{show.photo.url}}" alt="" class="img-fluid">
+                </div>
+                {% else %}
+                <div class="album_single_img" style="margin-right: -35px; float: right;">
+                    <img src="{{show.photo.url}}" alt="" class="img-fluid">
+                </div>
+                {% endif %}
+                
+                
+                    {% if LANGUAGE_CODE == 'en' %}
+                    <div class="album_single_text" >
+                    <h2 style="margin: revert;">{{show.name}} </h2>
+                    <h2 style="margin: revert;font-size: 15px;margin-top: -30px;">{{job_name}} </h2>
+                    <h2 style="margin: revert;font-size: 15px;">Age : {{show.age}} </h2>
+                    <h2 style="margin: revert;font-size: 15px;">Country : {{show.country}} </h2>
+                    <h2 style="margin: revert;font-size: 15px;">Movies : {{mcount}} </h2>
+                    <h2 style="margin: revert;font-size: 15px;">Tvshows : {{tcount}} </h2>
+                    </div>
+                    {% else %}
+                    <div class="album_single_text" style="direction: rtl;">
+                    <h2 style="margin: revert;">{{show.name}} </h2>
+                    <h2 style="margin: revert;font-size: 15px;margin-top: -30px;">{{job_name_ar}} </h2>
+                    <h2 style="margin: revert;font-size: 15px;">العمر : {{show.age}} </h2>
+                    <h2 style="margin: revert;font-size: 15px;">البلد : {{show.country}} </h2>
+                    <h2 style="margin: revert;font-size: 15px;"> الافلام : {{mcount}}</h2>
+                    <h2 style="margin: revert;font-size: 15px;">المسلسلات : {{tcount}} </h2>
+                    </div>
+                    {% endif %}
+               
+                
+                
+            </div>
+        </div>
+            <div class="ms_top_artist">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ms_heading">
+                            {% if LANGUAGE_CODE == 'en' %}
+                            <h1>All Movies & Tvshows</h1>
+                            {% else %}
+                            <h1>كل الافلام و المسلسلات </h1>
+                            {% endif %}
+                                
+                    
+                            </div>
+                        </div>
+                        {% for a_ll in all %}   
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                            <div class="ms_rcnt_box marger_bottom30">
+                                {% if a_ll.typee == 'Movies' and a_ll.coming_soon == False %}
+                                <h2 class="imbd" style="background:#D31336">{{a_ll.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% elif a_ll.coming_soon == True  %} 
+                                <h2 class="imbd" style="background:#F8CC2F">soon</h2>
+                                {% else %} 
+                                <h2 class="imbd" style="background:#3A5A81">{{a_ll.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% endif %}
+                                
+                                <div class="ms_rcnt_box_img">
+                                    <img src="{{a_ll.poster.url}}" alt="" class="img-fluid">
+                                    <div class="ms_main_overlay">
+                                        <div class="ms_box_overlay"></div>
+                                        
+                                        <div class="ms_play_icon">
+                                        {% if a_ll.typee == 'Movies' %}
+                                            <a href="{% url 'movie' mov_slug=a_ll.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{a_ll.typee}}</h1>
+                                        {% else %} 
+                                            <a href="{% url 'tvshow' tv_slug=a_ll.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{a_ll.typee}}</h1>   
+                                        {% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="ms_rcnt_box_text">
+                                
+                                {% if a_ll.typee == 'Movies' %}
+                                <h3><a href="{% url 'movie' mov_slug=a_ll.slug %}">{{a_ll.name}} {{a_ll.season}} , {{a_ll.release_year}}</a></h3>
+                                {% else %}
+                                <h3><a href="{% url 'tvshow' tv_slug=a_ll.slug %}">{{a_ll.name}} {{a_ll.season}} , {{a_ll.release_year}}</a></h3>
+                                {% endif %}
+                                {% if LANGUAGE_CODE == 'en' %}
+                                <h1>{{a_ll.category}} , {{a_ll.channel}}</h1>
+                                {% else %}
+                                <h1> {{a_ll.channel}} , {{a_ll.category.name_ar}} </h1>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% endfor %}
+                        
+                        
+                    </div>
+                </div>
+            </div>
+          	
+
+         </div>
+    {% if all.has_other_pages %}
+    <div class="pagination p12">
+        <ul>
+            {% if all.has_previous %}
+                <a href="?page={{all.previous_page_number}}"><li><i class="fa fa-arrow-left"></i></li></a>
+            {% endif %}
+
+            {% for i in all.paginator.page_range  %}
+            
+            {% if all.number == i  %}
+            <a class="is-active" href="?page={{i}}"><li>{{i}}</li></a>
+            {% else %}
+            <a href="?page={{i}}"><li>{{i}}</li></a>
+            {% endif %}
+            
+            
+            {% endfor %}
+            
+
+            {% if all.has_next %}
+                <a href="?page={{all.next_page_number}}"><li><i class="fa fa-arrow-right"></i></li></a>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+       
+{% endblock content %}

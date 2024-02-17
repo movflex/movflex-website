@@ -1,0 +1,367 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Online watch {% endblock %}
+{% block content %}
+
+ <div class="ms_content_wrapper padder_top80">
+            <div class="ms-banner">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="ms_banner_img"> 
+                            <img src="{% static 'images/mans.png' %}" alt="" class="img-fluid">
+                              <div class="img_cover">
+                               <p></P>
+                                </div>
+                                <div class="img_cover2">
+                                <p></p>
+                                </div>
+                            </div>
+                            <div class="ms_banner_text" style="margin-left: -50px;">
+                                <h1 style="font-size: 40px;">Movflex</h1>
+                                {% if LANGUAGE_CODE == 'en' %}
+                                <h1 class="ms_color">Endless Entertainment at your Fingertips</h1>
+                                <p>Watch any time and any where for FREE!<br> Action , Horror , Comedy , Animation and many more...</p>
+                                {% else %}
+                                <h1 class="ms_color">الترفيـــه اللانهائـــي بيـــن يديـــك</h1>
+                                <p>شاهد في اي وقت وفي اي مكان مجانا<br> اكشن , رعب , كوميديا , انيميشن وغيرها الكثير</p>
+                                
+                                {% endif %}
+                                <div class="ms_banner_btn">
+                                    
+                                    <a href="{% url 'movies' %}" class="ms_btn">
+                                    {% if LANGUAGE_CODE == 'en' %}
+                                    Watch now
+                                    {% else %}
+                                    شاهد الان
+                                    {% endif%}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if request.user.is_authenticated %}
+            <div class="ms_radio_wrapper">
+                <div class="ms_heading">
+                {% if LANGUAGE_CODE == 'en' %}
+                <h1>Recommended For You</h1>
+                {% else %}
+                <h1>اقتراحات من اجلك</h1>
+                {% endif %}
+                    
+                    
+                </div>
+                <div class="ms_radio_slider swiper-container swiper-container-horizontal ">
+                    <div class="swiper-wrapper">
+                    {% for recommend in recommends|slice:':12' %}         
+                     <div class="swiper-slide">
+                            <div class="ms_rcnt_box ">
+                                {% if recommend.typee == 'Movies' and recommend.coming_soon == False %}
+                                <h2 class="imbd" style="background:#D31336">{{recommend.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% elif recommend.typee == 'Tvshows' and recommend.coming_soon == False %} 
+                                <h2 class="imbd" style="background:#3A5A81">{{recommend.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% else %}
+                                <h2 class="imbd" style="background:#F8CC2F">soon</h2>
+                                {% endif %}
+                                <div class="ms_rcnt_box_img">
+                                    <img src="{{recommend.poster.url}}" alt="">
+                                    <div class="ms_main_overlay">
+                                        <div class="ms_box_overlay"></div>
+                                        <div class="ms_play_icon">
+                                        {% if recommend.typee == 'Movies' %}
+                                            <a href="{% url 'movie' mov_slug=recommend.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{recommend.typee}}</h1>
+                                        {% else %} 
+                                            <a href="{% url 'tvshow' tv_slug=recommend.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{recommend.typee}}</h1>   
+                                        {% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="ms_rcnt_box_text">
+                                {% if recommend.typee == 'Movies' %}
+                                <h3><a href="{% url 'movie' mov_slug=recommend.slug %}">{{recommend.name}} {{recommend.season}} , {{recommend.release_year}}</a></h3>
+                                {% else %}
+                                <h3><a href="{% url 'tvshow' tv_slug=recommend.slug %}">{{recommend.name}} {{recommend.season}} , {{recommend.release_year}}</a></h3>
+                                {% endif %}
+                                    
+                                
+                                {% if LANGUAGE_CODE == 'en' %}
+                                <h1>{{recommend.category}} , {{recommend.channel}}</h1>
+                                {% else %}
+                                <h1> {{recommend.channel}} , {{recommend.category.name_ar}} </h1>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                     
+                     {% endfor %}
+                        
+                      
+                     
+                     
+                    </div>
+                </div>
+                <!-- Add Arrows -->
+                <div class="swiper-button-next4 slider_nav_next arr_n"></div>
+                <div class="swiper-button-prev4 slider_nav_prev arr_p"></div>
+            </div>
+            {% else %}
+            {% endif %}
+            <div class="ms_fea_album_slider">
+                <div class="ms_heading">
+                {% if LANGUAGE_CODE == 'en' %}
+                <h1>Up coming</h1>
+                {% else %}
+                <h1> قادم قريبــا</h1>
+                {% endif %}
+                    
+                </div>
+                <div class="ms_album_slider swiper-container">
+                    <div class="swiper-wrapper">
+                    {% for soon in soons|slice:':8' %}         
+                     <div class="swiper-slide">
+                            <div class="ms_rcnt_box ">
+                                
+                                <h2 class="imbd" style="background:#F8CC2F">soon</h2>
+                                
+                                <div class="ms_rcnt_box_img">
+                                    <img src="{{soon.poster.url}}" alt="">
+                                    <div class="ms_main_overlay">
+                                        <div class="ms_box_overlay"></div>
+                                        <div class="ms_play_icon">
+                                        {% if soon.typee == 'Movies' %}
+                                            <a href="{% url 'movie' mov_slug=soon.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{soon.typee}}</h1>
+                                        {% else %} 
+                                            <a href="{% url 'tvshow' tv_slug=soon.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{soon.typee}}</h1>   
+                                        {% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="ms_rcnt_box_text">
+                                {% if soon.typee == 'Movies' %}
+                                <h3><a href="{% url 'movie' mov_slug=soon.slug %}">{{soon.name}} {{soon.season}} , {{soon.release_year}}</a></h3>
+                                {% else %}
+                                <h3><a href="{% url 'tvshow' tv_slug=soon.slug %}">{{soon.name}} {{soon.season}} , {{soon.release_year}}</a></h3>
+                                {% endif %}
+                                    
+                                {% if LANGUAGE_CODE == 'en' %}
+                                <h1>{{soon.category}} , {{soon.channel}}</h1>
+                                {% else %}
+                                <h1> {{soon.channel}} , {{soon.category.name_ar}} </h1>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                     
+                     {% endfor %}
+                        
+                    </div>
+                </div>
+                <!-- Add Arrows -->
+               <div class="swiper-button-next3 slider_nav_next arr_n"></div>
+                <div class="swiper-button-prev3 slider_nav_prev arr_p"></div>
+            </div>
+            
+            <div class="ms_radio_wrapper">
+                <div class="ms_heading">
+                {% if LANGUAGE_CODE == 'en' %}
+                <h1>Trending</h1>
+                {% else %}
+                <h1>الاكثر شيوعا  </h1>
+                {% endif %}
+                    
+                    
+                </div>
+                <div class="ms_radio_slider swiper-container swiper-container-horizontal ">
+                    <div class="swiper-wrapper">
+                    {% for trend in trends|slice:':12' %}         
+                     <div class="swiper-slide">
+                            <div class="ms_rcnt_box ">
+                                {% if trend.typee == 'Movies' and trend.coming_soon == False %}
+                                <h2 class="imbd" style="background:#D31336">{{trend.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% elif trend.typee == 'Tvshows' and trend.coming_soon == False %} 
+                                <h2 class="imbd" style="background:#3A5A81">{{trend.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% else %}
+                                <h2 class="imbd" style="background:#F8CC2F">soon</h2>
+                                {% endif %}
+                                <div class="ms_rcnt_box_img">
+                                    <img src="{{trend.poster.url}}" alt="">
+                                    <div class="ms_main_overlay">
+                                        <div class="ms_box_overlay"></div>
+                                        <div class="ms_play_icon">
+                                        {% if trend.typee == 'Movies' %}
+                                            <a href="{% url 'movie' mov_slug=trend.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{trend.typee}}</h1>
+                                        {% else %} 
+                                            <a href="{% url 'tvshow' tv_slug=trend.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{trend.typee}}</h1>   
+                                        {% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="ms_rcnt_box_text">
+                                {% if trend.typee == 'Movies' %}
+                                <h3><a href="{% url 'movie' mov_slug=trend.slug %}">{{trend.name}} {{trend.season}} , {{trend.release_year}}</a></h3>
+                                {% else %}
+                                <h3><a href="{% url 'tvshow' tv_slug=trend.slug %}">{{trend.name}} {{trend.season}} , {{trend.release_year}}</a></h3>
+                                {% endif %}
+                                    
+                                
+                                {% if LANGUAGE_CODE == 'en' %}
+                                <h1>{{trend.category}} , {{trend.channel}}</h1>
+                                {% else %}
+                                <h1> {{trend.channel}} , {{trend.category.name_ar}} </h1>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                     
+                     {% endfor %}
+                        
+                      
+                     
+                     
+                    </div>
+                </div>
+                <!-- Add Arrows -->
+                <div class="swiper-button-next4 slider_nav_next arr_n"></div>
+                <div class="swiper-button-prev4 slider_nav_prev arr_p"></div>
+            </div>
+           
+            <div class="ms_featured_slider">
+                <div class="ms_heading">
+                {% if LANGUAGE_CODE == 'en' %}
+                <h1>New Release</h1>
+                {% else %}
+                <h1>اضيف مؤخرا</h1>
+                {% endif %}
+                    
+                </div>
+                <div class="ms_feature_slider swiper-container">
+                    <div class="swiper-wrapper">
+                    {% for new in news|slice:':6' %}
+                        <div class="swiper-slide">
+                            <div class="ms_rcnt_box ">
+                                {% if new.typee == 'Movies' and new.coming_soon == False %}
+                                <h2 class="imbd" style="background:#D31336">{{new.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% elif new.typee == 'Tvshows' and new.coming_soon == False %} 
+                                <h2 class="imbd" style="background:#3A5A81">{{new.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% else %}
+                                <h2 class="imbd" style="background:#F8CC2F">soon</h2>
+                                {% endif %}
+                                <div class="ms_rcnt_box_img">
+                                    <img src="{{new.poster.url}}" alt="">
+                                    <div class="ms_main_overlay">
+                                        <div class="ms_box_overlay"></div>
+                                        <div class="ms_play_icon">
+                                        {% if new.typee == 'Movies' %}
+                                            <a href="{% url 'movie' mov_slug=new.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{new.typee}}</h1>
+                                        {% else %} 
+                                            <a href="{% url 'tvshow' tv_slug=new.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{new.typee}}</h1>   
+                                        {% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="ms_rcnt_box_text">
+                               
+                                {% if new.typee == 'Movies' %}
+                                <h3><a href="{% url 'movie' mov_slug=new.slug %}">{{new.name}} {{new.season}} , {{new.release_year}}</a></h3>
+                                {% else %}
+                                <h3><a href="{% url 'tvshow' tv_slug=new.slug %}">{{new.name}} {{new.season}} , {{new.release_year}}</a></h3>
+                                {% endif %}
+                                    
+                                
+                                {% if LANGUAGE_CODE == 'en' %}
+                                <h1>{{new.category}} , {{new.channel}}</h1>
+                                {% else %}
+                                <h1> {{new.channel}} , {{new.category.name_ar}} </h1>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Add Arrows -->
+               <div class="swiper-button-next1 slider_nav_next arr_n"></div>
+                <div class="swiper-button-prev1 slider_nav_prev arr_p"></div>
+            </div>
+			
+            
+
+            <div class="ms_fea_album_slider">
+                <div class="ms_heading">
+                {% if LANGUAGE_CODE == 'en' %}
+                <h1>Top Rated</h1>
+                {% else %}
+                <h1>الاكثر تقييما</h1>
+                {% endif %}
+                    
+                </div>
+                <div class="ms_album_slider swiper-container">
+                    <div class="swiper-wrapper">
+                    {% for top in tops|slice:':12' %}         
+                     <div class="swiper-slide">
+                            <div class="ms_rcnt_box ">
+                                {% if top.typee == 'Movies' %}
+                                <h2 class="imbd" style="background:#D31336">{{top.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% else %} 
+                                <h2 class="imbd" style="background:#3A5A81">{{top.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% endif %}
+                                <div class="ms_rcnt_box_img">
+                                    <img src="{{top.poster.url}}" alt="">
+                                    <div class="ms_main_overlay">
+                                        <div class="ms_box_overlay"></div>
+                                        <div class="ms_play_icon">
+                                        {% if top.typee == 'Movies' %}
+                                            <a href="{% url 'movie' mov_slug=top.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{top.typee}}</h1>
+                                        {% else %} 
+                                            <a href="{% url 'tvshow' tv_slug=top.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{top.typee}}</h1>   
+                                        {% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="ms_rcnt_box_text">
+                                {% if top.typee == 'Movies' %}
+                                <h3><a href="{% url 'movie' mov_slug=top.slug %}">{{top.name}} {{top.season}} , {{top.release_year}}</a></h3>
+                                {% else %}
+                                <h3><a href="{% url 'tvshow' tv_slug=top.slug %}">{{top.name}} {{top.season}} , {{top.release_year}}</a></h3>
+                                {% endif %}
+                                    
+                                {% if LANGUAGE_CODE == 'en' %}
+                                <h1>{{top.category}} , {{top.channel}}</h1>
+                                {% else %}
+                                <h1> {{top.channel}} , {{top.category.name_ar}} </h1>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                     
+                     {% endfor %}
+                        
+                    </div>
+                </div>
+                <!-- Add Arrows -->
+               <div class="swiper-button-next3 slider_nav_next arr_n"></div>
+                <div class="swiper-button-prev3 slider_nav_prev arr_p"></div>
+            </div>
+        
+			
+            <!----Main div close---->
+        </div>
+       
+{% endblock content %}

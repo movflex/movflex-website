@@ -1,0 +1,129 @@
+{% extends 'base.html'%}
+{% load static %}
+{% load widget_tweaks %}
+{% block title%} Movies {% endblock %}
+{% block content %}
+ <div class="ms_top_artist">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ms_heading">
+                            {% if LANGUAGE_CODE == 'en' %}
+                            <h1>Movies </h1>
+                            <a  class="ms_admin_name" id="cat" style="margin-right: 50px;" ><i class="fa fa-filter"></i> Filter </a>
+                            <ul class="pro_dropdown_menu" id="caty" style="margin-top: 5px;margin-right: 30px; max-width: 220px;">
+                            
+                            <form method="GET">
+                            <label style="font-size: 13px;margin-bottom: 8px;">Gener</label>
+                            {% render_field movieFilter.form.category class="form-control"%}
+                            <br>
+                            <label style="font-size: 13px;margin-bottom: 8px;">Channel</label>
+                            {% render_field movieFilter.form.channel class="form-control"%}
+                            <br>
+                            <label style="font-size: 13px;margin-bottom: 8px;">Year</label>
+                            {% render_field movieFilter.form.release_year class="form-control"%}
+                            <br>
+                            <label style="font-size: 13px;margin-bottom: 8px;">Langugae</label>
+                            {% render_field movieFilter.form.language class="form-control"%}
+                            <br>
+                            <input type="submit" value="Get" class="form-control" style="background-color: #252131; color: white;">
+                            </form>
+
+                            {% else %}
+                            <h1>الافلام </h1>
+                            <a  class="ms_admin_name" id="cat" style="margin-right: 50px;" ><i class="fa fa-filter"></i> تصفية </a>
+                            <ul class="pro_dropdown_menu" id="caty" style="margin-top: 5px;margin-right: 30px; max-width: 220px; direction: rtl;">
+                            
+                            <form method="GET">
+                            <label style="font-size: 13px;margin-bottom: 8px;">الفئة</label>
+                            {% render_field movieFilter.form.category class="form-control"%}
+                            <br>
+                            <label style="font-size: 13px;margin-bottom: 8px;">المنصة</label>
+                            {% render_field movieFilter.form.channel class="form-control"%}
+                            <br>
+                            <label style="font-size: 13px;margin-bottom: 8px;">السنة</label>
+                            {% render_field movieFilter.form.release_year class="form-control"%}
+                            <br>
+                            <label style="font-size: 13px;margin-bottom: 8px;">اللغة</label>
+                            {% render_field movieFilter.form.language class="form-control"%}
+                            <br>
+                            <input type="submit" value="اجلب" class="form-control" style="background-color: #252131; color: white;">
+                            </form>
+
+                            {% endif %}
+                       
+                            
+						</ul>
+                            </div>
+                        </div>
+{% for mov in movies %}         
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-6 ">
+                            <div class="ms_rcnt_box marger_bottom30">
+                                {% if mov.coming_soon == True  %} 
+                                <h2 class="imbd" style="background:#F8CC2F">soon</h2>
+                                {% else %}
+                                <h2 class="imbd" style="background:#D31336">{{mov.imbd}} <i class="fa fa-star"  ></i> </h2>
+                                {% endif %}
+                                <div class="ms_rcnt_box_img">
+                                    <img src="{{mov.poster.url}}" alt="" class="img-fluid">
+                                    <div class="ms_main_overlay">
+                                        <div class="ms_box_overlay"></div>
+                                        
+                                        <div class="ms_play_icon">
+                                            <a href="{% url 'movie' mov_slug=mov.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{mov.category}}</h1>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="ms_rcnt_box_text">
+                                <h3><a href="{% url 'movie' mov_slug=mov.slug %}">{{mov.name}} {{mov.season}} , {{mov.release_year}}</a></h3>
+                                {% if LANGUAGE_CODE == 'en' %}
+                                <h1>{{mov.category}} , {{mov.channel}}</h1>
+                                {% else %}
+                                <h1> {{mov.channel}} , {{mov.category.name_ar}} </h1>
+                                {% endif %}
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+{% empty %}
+{% if LANGUAGE_CODE == 'en' %}
+<h4 class="alarm"> No movies found <a href="{% url 'movies'%}" class="text-dark"> See All Movies </a>
+</h4>
+{% else %}
+<h4 class="alarm"> لم يتم العثور على افلام   <a href="{% url 'movies'%}" class="text-dark"> مشاهدة كل الافلام </a> </h4>
+{% endif %}
+{% endfor %}
+                        
+                    </div>
+
+                </div>
+                
+            </div>
+    {% if movies.has_other_pages %}
+    <div class="pagination p12">
+        <ul>
+            {% if movies.has_previous %}
+                <a href="?{{ request.GET.urlencode}}&page={{movies.previous_page_number}}"><li><i class="fa fa-arrow-left"></i></li></a>
+            {% endif %}
+
+            {% for i in movies.paginator.page_range %}
+            
+            {% if movies.number == i  %}
+            <a class="is-active" href="?{{ request.GET.urlencode}}&page={{i}}"><li>{{i}}</li></a>
+            {% else %}
+            <a href="?{{ request.GET.urlencode}}&page={{i}}"><li>{{i}}</li></a>
+            {% endif %}
+            
+            {% endfor %}
+
+            {% if movies.has_next %}
+                <a href="?{{ request.GET.urlencode}}&page={{movies.next_page_number}}"><i class="fa fa-arrow-right"></i></a>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+          	
+{% endblock content %}

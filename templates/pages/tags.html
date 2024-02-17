@@ -1,0 +1,85 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block title%} Tags - {{tag_titel}} {% endblock %}
+{% block content %}
+
+<div class="ms_top_artist">
+    {% if 'movies_tag' in request.path %}
+    {% if LANGUAGE_CODE == 'en' %}
+    <h4 class="search_result"> Movies related to  <span style="color:#D31336; display: block; margin-top: 20px;"> ' {{tag_titel}} '</span></h4>
+    {% else %}
+    <h4 class="search_result"> افلام متعلقة ب <span style="color:#D31336; display: block; margin-top: 20px;"> ' {{tag_titel}} '</span> </h4>
+    {% endif %}
+    {% else %}
+    {% if LANGUAGE_CODE == 'en' %}
+    <h4 class="search_result"> Tvshows related to  <span style="color:#D31336; display: block; margin-top: 20px;"> ' {{tag_titel}} '</span></h4>
+    {% else %}
+    <h4 class="search_result"> مسلسلات متعلقة ب <span style="color:#D31336; display: block; margin-top: 20px;"> ' {{tag_titel}} '</span> </h4>
+    {% endif %}
+    {% endif %}
+ 
+                <div class="container">
+                    <div class="row">
+                    
+    {% for show in shows %}       
+   
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                            <div class="ms_rcnt_box marger_bottom30">
+                                {% if show.typee == 'Movies' and show.coming_soon == False %}
+                                <h2 class="imbd" style="background:#D31336">{{show.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% elif search.coming_soon == True  %} 
+                                <h2 class="imbd" style="background:#F8CC2F">soon</h2>
+                                {% else %} 
+                                <h2 class="imbd" style="background:#3A5A81">{{show.imbd}} <i class="fa fa-star" ></i> </h2>
+                                {% endif %}
+                                
+                                <div class="ms_rcnt_box_img">
+                                    <img src="{{show.poster.url}}" alt="" class="img-fluid">
+                                    <div class="ms_main_overlay">
+                                        <div class="ms_box_overlay"></div>
+                                        
+                                        <div class="ms_play_icon">
+                                        {% if show.typee == 'Movies' %}
+                                            <a href="{% url 'movie' mov_slug=show.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{show.typee}}</h1>
+                                        {% else %} 
+                                            <a href="{% url 'tvshow' tv_slug=show.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{show.typee}}</h1>   
+                                        {% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="ms_rcnt_box_text">
+                                
+                                {% if show.typee == 'Movies' %}
+                                <h3><a href="{% url 'movie' mov_slug=show.slug %}">{{show.name}} {{show.season}} , {{show.release_year}}</a></h3>
+                                {% else %}
+                                <h3><a href="{% url 'tvshow' tv_slug=show.slug %}">{{show.name}} {{show.season}} , {{show.release_year}}</a></h3>
+                                {% endif %}
+                                
+                                {% if LANGUAGE_CODE == 'en' %}
+                                <h1>{{show.category}} , {{show.channel}}</h1>
+                                {% else %}
+                                <h1> {{show.channel}} , {{show.category.name_ar}} </h1>
+                                {% endif %}
+                                
+                                </div>
+                            </div>
+                        </div>
+
+    {% empty %}
+    {% if LANGUAGE_CODE == 'en' %}
+    <h4 class="alarm"> No thing found </h4>
+    {% else %}
+    <h4 class="alarm"> لم يتم العثور على نتائج </h4>
+    {% endif %}
+
+
+    {% endfor %}
+                        
+            </div>
+        </div>
+    </div>
+          	
+{% endblock content %}

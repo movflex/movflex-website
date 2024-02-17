@@ -1,0 +1,41 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block title%} Channels {% endblock %}
+{% block content %}
+  <div class="ms_top_artist">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ms_heading">
+                            {% if LANGUAGE_CODE == 'en' %}
+                            <h1>Channels</h1>
+                            {% else %}
+                            <h1>المنصات</h1>
+                            {% endif %}
+                                
+                            </div>
+                        </div>
+                        {% for chan in channels %}
+                        <div class="col-lg-3 col-md-6">
+                            <div class="ms_rcnt_box marger_bottom30">
+                                <div class="ms_rcnt_box_img chanel">
+                                    <img src="{{chan.logo.url}}" alt="" class="img-fluid">
+                                    <div class="ms_main_overlay">
+                                        <div class="ms_box_overlay"></div>
+                                        <div class="ms_play_icon" style="top: 50%" style="top: 50%">
+                                            <a href="{% url 'channel' chan_slug=chan.slug%}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ms_rcnt_box_text chanel_text">
+                                    <h3><a href="#">{{chan.name}}</a></h3>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                    </div>
+                </div>
+            </div>
+          
+{% endblock content %}

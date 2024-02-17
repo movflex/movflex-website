@@ -1,0 +1,487 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block title %} Movies - {{mov.name}} {{mov.season}}{% endblock %}
+{% block content %}
+<div class="ms_album_single_wrapper">
+    <div class="album_single_data">
+            {% if LANGUAGE_CODE == 'en' %}
+            <div class="album_single_img">
+                    <img src="{{mov.poster.url}}" alt="" class="img-fluid">
+                </div>
+            {% else %}
+            <div class="album_single_img" style="margin-left: -35px; float: right;"> 
+                    <img src="{{mov.poster.url}}" alt="" class="img-fluid">
+                </div>
+            {% endif %}
+                
+                    {% if LANGUAGE_CODE == 'en' %}
+                    <div class="album_single_text">
+                        <h2>{{mov.name}} {{mov.season}} 
+                            {% if mov.coming_soon == True %}
+                            <span style="color:#F8CC2F">(soon)</span>
+                            {% else%}
+                            {% endif %}</h2>
+                    <p class="singer_name"><span><b> Type :</b> {{mov.typee}} </span></p>
+                    <p class="singer_name"><span><b> Category :</b> {{mov.category}} </span></p>
+                    <p class="singer_name"><span><b> Channel :</b> <a href="{% url 'channel' chan_slug=mov.channel.slug %}"> <span>{{mov.channel}}  </span></a></p>
+                    <p class="singer_name"><span><b> Language :</b> {{mov.language}} </span></p>
+                    <div class="album_feature">
+                        <a class="album_date"><b>IMDB : </b>{{mov.imbd}} <i class="fa fa-star"  ></i></a>
+                        <a class="album_date"> <b>Release year : </b> {{mov.release_year}} </a>
+                        <a class="album_date"><b>Story : </b></a>
+                        <p style="margin-left: 20px; font-size: 12px;">{{mov.description}}</p>
+                    </div>
+                    
+                    {% else %}
+                    <div class="album_single_text" style="margin-left: -35px; direction: rtl;">
+                        <h2>{{mov.name}} {{mov.season}} 
+                            {% if mov.coming_soon == True %}
+                            <span style="color:#F8CC2F">(قريبــا)</span>
+                            {% else%}
+                            {% endif %}
+                        </h2>
+                    <p class="singer_name"><span><b> النوع :</b> افلام</span></p>
+                    <p class="singer_name"><b>  التصنيف :</b><span> {{mov.category.name_ar}}  </span></p>
+                    <p class="singer_name"><b>  المنصة :</b><a href="{% url 'channel' chan_slug=mov.channel.slug %}"> <span>{{mov.channel}}  </span></a></p>
+                    <p class="singer_name"><span><b> اللغة:</b> {{mov.language.name_ar}} </span></p>
+                    <div class="album_feature">
+                        <a class="album_date"> <b>  تقييم : </b>{{mov.imbd}} <i class="fa fa-star"  ></i> </a>
+                        <a class="album_date"> <b>  سنة الاصدار   :</b> {{mov.release_year}}  </a>
+                        <a class="album_date"><b>  القصة :</b></a>
+                        <p style="margin-left: 20px; font-size: 12px;">{{mov.description_ar}}</p>
+                    </div>
+                    
+                    {% endif %}
+            
+            
+        </div>
+        {% if request.user.is_authenticated %}
+        <div class="album_btn">
+            {% include  'parts/alerts.html'%}
+              {% if LANGUAGE_CODE == 'en' %}
+              {% if mov.coming_soon == True %}
+              <a href="{% url 'add_movie_notify' mov_id=mov.id %}" class="ms_btn play_btn" style="background-color:#3A5A81;">Notify Me <i class="fa fa-bell"></i></a>
+              {% else %}
+              <a href="{% url 'add_movie_history' mov_id=mov.id url=mov.watch_url %}" class="ms_btn play_btn" target="_blank">Watch   <i class="fa fa-play"></i></a>
+              {% endif %}
+              {% if favorits == False %}
+              <a href="{% url 'add_movie_favourits' mov_id=mov.id %}" class="ms_btn play_btn">Add Favourits <i class="fa fa-heart"></i></a>
+              {% else %}
+              <a href="{% url 'show_favourits' %}" class="ms_btn play_btn" style="background-color:#3A5A81;">Show Favourits <i class="fa fa-heart"></i></a>
+              {% endif %}
+              {% else %}
+              {% if mov.coming_soon == True %}
+              <a href="{% url 'add_movie_notify' mov_id=mov.id %}" class="ms_btn play_btn" style="background-color:#3A5A81;">اشعرنــي <i class="fa fa-bell"></i></a>
+              {% else %}
+              <a href="{% url 'add_movie_history' mov_id=mov.id url=mov.watch_url %}" class="ms_btn play_btn" target="_blank">مشاهدة   <i class="fa fa-play"></i></a>
+              {% endif %}
+              {% if favorits == False %}
+              <a href="{% url 'add_movie_favourits' mov_id=mov.id %}" class="ms_btn play_btn">اضافة للمفضلة <i class="fa fa-heart"></i></a>
+              {% else %}
+              <a href="{% url 'show_favourits' %}" class="ms_btn play_btn" style="background-color:#3A5A81;">عرض المفضلة <i class="fa fa-heart"></i></a>
+              {% endif %}
+              
+              {% endif %}
+          </div>
+
+        {% else %}
+
+          <div class="album_btn">
+          {% if LANGUAGE_CODE == 'en' %}
+          <a href="{% url 'login' %}?next_page={{ request.path|urlencode}}" class="ms_btn">Login to watch</a>
+
+          {% else %}
+          <a href="{% url 'login' %}?next_page={{ request.path|urlencode}}" class="ms_btn">تسجيل الدخول للمشاهدة</a>
+
+          {% endif %}
+                  
+          </div>
+        {% endif %}
+        <!---Tags--->
+        <div class="widget widget_tag_cloud">
+            <div class="ms_heading">
+                {% if LANGUAGE_CODE == 'en' %}
+                <h1>Tags</h1>
+                {% else %}
+                <h1>علامات</h1>
+                {% endif %}
+                </div>
+            <ul>
+            {% for tag in tags %}
+                <li><a href="{% url 'movies_tag' tag_slug=tag.slug %}">{{tag.titel}}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+        
+        
+        <!----New Releases Section Start---->
+        <div class="ms_releases_wrapper">
+                <div class="ms_heading">
+                    {% if LANGUAGE_CODE == 'en' %}
+                    <h1>Top Cast</h1>
+                    {% else %}
+                    <h1>الممثلين</h1>
+                    {% endif %}
+                </div>
+                <div class="ms_release_slider swiper-container">
+                    <div class="ms_divider"></div>
+                    <div class="swiper-wrapper">
+                    {% for cast in casts %}
+                        <div class="swiper-slide">
+                            <div class="ms_release_box">
+                                <div class="w_top_song">
+                                    <span class="slider_dot"></span>
+                                    <div class="w_tp_song_img">
+                                        <img src="{{cast.photo.url}}">
+                                        
+                                    </div>
+                                    <div class="w_tp_song_name">
+                                        <a href="{% url 'cast_detailes' cast_slug=cast.slug%}"><h3 style="margin-top: 20px;color: #fff;">{{cast.name}}</h3></a>
+                                        
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+                <!-- Add Arrows -->
+                <div class="swiper-button-next2 slider_nav_next"></div>
+                <div class="swiper-button-prev2 slider_nav_prev"></div>
+            </div>
+        <!----New Releases Section Start---->
+        <div class="ms_weekly_wrapper ms_free_music">
+                <div class="ms_weekly_inner">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ms_heading">
+                            {% if LANGUAGE_CODE == 'en' %}
+                            <h1>Directors & Writers</h1>
+                            {% else %}
+                            <h1>المؤلفين و الكاتبين</h1>
+                            {% endif %}
+                                
+                            </div>
+                        </div>
+                        {% for show in dirs_wrs %}
+                        <div class="col-lg-4 col-md-12 padding_right40">
+                            <div class="ms_weekly_box">
+                                <div class="weekly_left">
+                                    <div class="w_top_song">
+                                        <div class="w_tp_song_img">
+                                            <img src="{{show.photo.url}}">
+                                        </div>
+                                        <div class="w_tp_song_name">
+                                            {% if show.job == "Director"%}
+                                            <a href="{% url 'director_detailes' dir_slug=show.slug%}"><h3 style="margin-top: 10px;margin-bottom: 0px;color: #fff;">{{show.name}}</h3></a>
+                                            {% else %}
+                                            <a href="{% url 'writer_detailes' wr_slug=show.slug%}"><h3 style="margin-top: 10px;margin-bottom: 0px;color: #fff;">{{show.name}}</h3></a>
+                                            {% endif %}
+                                            <p>{{show.job}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ms_divider"></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+        
+        <div class="ms_test_wrapper">
+                <div class="ms_heading">
+                {% if LANGUAGE_CODE == 'en' %}
+                <h1>Comments</h1>
+                {% else %}
+                <h1>التعليقات</h1>
+                {% endif %}
+                    
+                </div>
+                <div class="ms_test_slider swiper-container" >
+                    <div class="swiper-wrapper">
+                    {% for com in comments %}
+                        <div class="swiper-slide">
+                            <div class="ms_test_box">
+                                <div class="ms_test_top">
+                                    <div class="ms_test_img">
+                                    {% if com.user_nam.userprofile.photo %}
+                                    <img src="{{com.user_nam.userprofile.photo.url}}">
+                                    {% else %}
+                                    <span class="com_pro"> {{com.user_nam.username|slice:':2'}}</span>
+                                    {% endif %}	
+                                        
+                                    </div>
+                                    <div class="ms_test_name">
+                                        <h3>{{com.user_nam.username}}</h3>
+                                        <h4>{{com.evalute}} <i class="fa fa-star"  ></i> </h4>
+                                        <span class="cmnt_time">{{com.comment_date}}</span>
+                                    </div>
+                                </div>
+                                <div class="ms_test_para">
+                                    <p>{{com.comment}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        {% empty %}
+                        <h4 class="alarm"> No Comments yet </h4>
+                    {% endfor %}
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </div>
+                <!-- Add Arrows -->
+                <div class="swiper-button-next1 slider_nav_next" style="right:-30px;"></div>
+                <div class="swiper-button-prev1 slider_nav_prev" style="left:-30px;"></div>
+            </div>
+
+            <!----Comment Form section Start---->
+            {% if request.user.is_authenticated %}
+            
+            <div class="ms_cmnt_wrapper">
+                <div class="ms_heading">
+                    {% if LANGUAGE_CODE == 'en' %}
+                    <h1>Your Comment</h1>
+                    {% else %}
+                    <h1>تعليقك</h1>
+                    {% endif %}
+                </div>
+                {% for mycom in mycomment %}
+                     <div class="ms_test_box" id="com">
+                                <div class="ms_test_top">
+                                    <div class="ms_test_img">
+                                    {% if mycom.user_nam.userprofile.photo %}
+                                    <img src="{{mycom.user_nam.userprofile.photo.url}}">
+                                    {% else %}
+                                    <span class="com_pro"> {{mycom.user_nam.username|slice:':2'}}</span>
+                                    {% endif %}	
+                                      
+                                    </div>
+                                    <div class="ms_test_name">
+                                        <h3>{{mycom.user_nam.username}}</h3>
+                                        <h4>{{mycom.evalute}} <i class="fa fa-star"  ></i> </h4>
+                                        <span class="cmnt_time">{{mycom.comment_date}}</span>
+                                    </div>
+                                </div>
+                                <div class="ms_test_para">
+                                    <p>{{mycom.comment}}</p>
+                                    <form method="POST">
+                                    {% if LANGUAGE_CODE == 'en' %}
+                                    <h4 class="del"><a type="submit" href="{% url 'movie_del_comment' mycom.id  mov.slug %}" style="color:white;" > Delete </a>
+                                    {% else %}
+                                    <h4 class="del"><a type="submit" href="{% url 'movie_del_comment' mycom.id  mov.slug %}" style="color:white;" > حذف </a>
+                                    {% endif %}
+                                    
+                                </form>
+                                {% if LANGUAGE_CODE == 'en' %}
+                                        <h4 class="del" style="background-color:#3A5A81;" ><button id="toggleButton" style="background-color:#3A5A81; color:white;cursor: pointer;" onclick="toggleEdit()"> Edit </button>
+                                    {% else %}
+                                        <h4 class="del" style="background-color:#3A5A81;"><button id="toggleButton" style="background-color:#3A5A81; color:white;cursor: pointer;" onclick="toggleEdit()"> تعديل </button>
+                                    {% endif %}
+                                </div>
+                                
+                            </div>
+                            {% comment %} edit section {% endcomment %}
+                            <div class="ms_cmnt_form" id="edit">
+                                <form method="GET" action="{% url 'movie_edit_comment' %}">
+                                    <input type="hidden" name="movie" value="{{mov.id}}" >
+                                    <input type="hidden" name="com_id" value="{{mycom.id}}" >
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="comment_input_wrapper">
+                                                <input type="number" step="any" min="1.0" max="9.9" name="evalute"  class="cmnt_field" placeholder="rate 1-10" value="{{mycom.evalute}}">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="comment_input_wrapper">
+                                                
+                                                <textarea id="comment" name="comment" class="cmnt_field" placeholder="Enter Your Comment Here.." >{{mycom.comment}}</textarea>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="comment-form-submit">
+                                                {% if LANGUAGE_CODE == 'en' %}
+                                                <input name="submit" type="submit" id="comment-submit" class="submit ms_btn" value="Save changes">
+                                                {% else %}
+                                                <input name="submit" type="submit" id="comment-submit" class="submit ms_btn" value="حفظ التغييرات">
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </form>
+                            </div>
+                            
+                        </div>
+
+                            {% empty %}
+                            
+                                <div class="ms_cmnt_form">
+                                    <form method="GET" action="{% url 'mvoie_add_comment' %}">
+                                        <input type="hidden" name="user" value="{{request.user.username}}">
+                                        <input type="hidden" name="movie" value="{{mov.id}}" >
+                                        
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="comment_input_wrapper">
+                                                    <input type="number" step="any" min="1.0" max="9.9" name="evalute"  class="cmnt_field" placeholder="rate 1-10" required>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-lg-12 col-md-12">
+                                                <div class="comment_input_wrapper">
+                                                    {% if LANGUAGE_CODE == 'en' %}
+                                                    <textarea id="comment" name="comment" class="cmnt_field" placeholder="Enter Your Comment Here.." required></textarea>
+                                                    {% else %}
+                                                    <textarea id="comment" name="comment" class="cmnt_field" placeholder=" ..اكتب تعليقك هنا" required></textarea>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 col-md-12">
+                                                <div class="comment-form-submit">
+                                                    {% if LANGUAGE_CODE == 'en' %}
+                                                    <input name="submit" type="submit" id="comment-submit" class="submit ms_btn" value="Post Comment">
+                                                    {% else %}
+                                                    <input name="submit" type="submit" id="comment-submit" class="submit ms_btn" value="نشر تعليقك">
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </form>
+                                </div>
+                                
+                            </div>
+
+                     
+                     
+                
+                {% endfor %}
+               
+            {% else %}
+            {% if LANGUAGE_CODE == 'en' %}
+            <a href="{% url 'login' %}?next_page={{ request.path|urlencode}}" class="ms_btn login_btn" style="margin-top: 60px;width: 220px;">Login to comment</a>
+
+            {% else %}
+            <a href="{% url 'login' %}?next_page={{ request.path|urlencode}}" class="ms_btn login_btn" style="margin-top: 60px;width: 220px;">تسجيل الدخول للتعليق</a>
+
+            {% endif %}
+            {% endif %}
+            <div class="ms_weekly_wrapper">
+            <div class="ms_weekly_inner">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ms_heading">
+                    {% if LANGUAGE_CODE == 'en' %}
+                    <h1>Seasons </h1>
+                    {% else %}
+                    <h1> الاجزاء</h1>
+                    {% endif %}
+                    
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-12 padding_right40">
+                {% for part in parts %}         
+
+                <div class="ms_divider"></div>
+                <div class="ms_weekly_box">
+                    <div class="weekly_left">
+                        <span class="w_top_no">
+                            {{part.season}}
+                        </span>
+                        <div class="w_top_song">
+                            <div class="w_tp_song_img">
+                                <img src="{{part.poster.url}}" alt="">
+                                <div class="ms_song_overlay">
+                                </div>
+                                <div class="ms_play_icon">
+                                    <a href="{% url 'movie' mov_slug=part.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                </div>
+                            </div>
+                            <div class="w_tp_song_name">
+                            {% if like.season == 1 %}
+                                <h3><a href="{% url 'movie' mov_slug=part.slug %}">{{part.name}}</a></h3>
+                            {% else %}
+                            <h3><a href="{% url 'movie' mov_slug=part.slug %}">{{part.name}} {{part.season}} , {{part.release_year}}</a></h3>
+                            {% endif %}
+                                <p>{{part.category}} , {{part.channel}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                                        
+                    </div>
+                    </div>
+                        
+                     
+                     {% endfor %}
+                </div>
+            </div>
+        </div>
+            <div class="ms_rcnt_slider">
+                <div class="ms_heading">
+                {% if LANGUAGE_CODE == 'en' %}
+                <h1>You may like </h1>
+                {% else %}
+                <h1>ربما يعجبك ايضا </h1>
+                {% endif %}
+                    
+                </div>
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                    {% for like in movies %}         
+                     <div class="swiper-slide">
+                            <div class="ms_rcnt_box">
+                                <h2 class="imbd" style="background:#D31336">{{like.imbd}} <i class="fa fa-star"  ></i> </h2>
+                                <div class="ms_rcnt_box_img">
+                                    <img src="{{like.poster.url}}" alt="">
+                                    <div class="ms_main_overlay">
+                                        <div class="ms_box_overlay"></div>
+                                         
+                                        <div class="ms_play_icon">
+                                        <a href="{% url 'movie' mov_slug=like.slug %}"><img src="{% static 'images/svg/play.svg'%}" alt=""></a>
+                                            <h1 class="film">{{like.channel}}</h1>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="ms_rcnt_box_text">
+                                    <h3><a href="{% url 'movie' mov_slug=like.slug %}">{{like.name}} {{like.season}} , {{like.release_year}}</a></h3>
+                                
+                                {% if LANGUAGE_CODE == 'en' %}
+                                <h1>{{like.category}} , {{like.channel}}</h1>
+                                {% else %}
+                                <h1> {{like.channel}} , {{like.category.name_ar}} </h1>
+                                {% endif %}
+
+                                </div>
+                            </div>
+                        </div>
+                        
+                     
+                     {% endfor %}
+                        
+                      
+                     
+                     
+                    </div>
+                </div>
+                <!-- Add Arrows -->
+                <div class="swiper-button-next slider_nav_next" style="right:-30px;"></div>
+                <div class="swiper-button-prev slider_nav_prev" style="left:-30px;"></div>
+            </div>
+        
+    </div> 
+
+</div>            
+           
+{% endblock content %}

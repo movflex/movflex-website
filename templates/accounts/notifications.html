@@ -1,0 +1,93 @@
+{% extends 'base.html'%}
+{% load static %}
+{% load widget_tweaks %}
+{% block title%} Notifications {% endblock %}
+{% block content %}
+<div class="ms_album_single_wrapper" >
+    <div class="album_single_data">
+<div class="ms_weekly_wrapper" style="padding-top: 0px;margin-top: 0px; min-height:500px;">
+    <div class="ms_weekly_inner">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ms_heading">
+            {% if LANGUAGE_CODE == 'en' %}
+            <h1>Notifications </h1>
+            <span class="hstry_clear ms_btn"><a href="{% url 'clear_notifications' %}">clear all</a></span>
+            {% else %}
+            <h1> الاشـعــارات</h1>
+            <span class="hstry_clear ms_btn"><a href="{% url 'clear_notifications' %}">ازالـة الكــل</a></span>
+            {% endif %}
+
+            </div>
+        </div>
+
+        {% if request.user.is_authenticated %}
+        {% for notf in notifications %}
+        <div class="col-lg-12 col-md-12 ">
+                 
+
+        <div class="ms_divider"></div>
+        <div class="ms_weekly_box">
+            {% if notf.show.typee == 'Movies'%}
+            <a href="{% url 'read_movie_notify' notf.id notf.show.id  %}">
+            {% else %}
+            <a href="{% url 'read_tvshow_notify' notf.id notf.show.id  %}">
+            {% endif %}
+                {% if notf.read == False %}
+            <div class="overlay" style="background: #3a5a81;margin: 10px;padding: 5px;height: 100%;">
+                <div class="weekly_left">
+                    <span class="w_top_no" style="right: 20px;position: absolute;">
+                        <i class="fa fa-envelope"></i>
+                    </span>
+                {%else%}
+                <div class="weekly_left">
+                    <span class="w_top_no" style="right: 20px;position: absolute;">
+                        <i class="fa fa-envelope-open-o"></i>
+                    </span>
+                {%endif%}
+            
+                <div class="w_top_song">
+                    <div class="w_tp_song_img">
+                        <img src="{{notf.show.poster.url}}" alt="">
+                        
+                        
+                    </div>
+                    <div class="w_tp_song_name">
+                    <h3 style="margin-top: 25px;font-size: 20px; color:white;">{{notf.show.name}} {{notf.show.season}}</h3>
+                    <span style="color:white;">it is avialable now</span>
+                    
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </a> 
+                                
+            </div>
+            </div>
+                
+            {% empty %}
+            {% if LANGUAGE_CODE == 'en' %}
+            <h4 class="alarm"> There is no Notifications </h4>
+            {% else %}
+            <h4 class="alarm"> لا توجــد اشعــارات</h4>
+            {% endif %}
+             
+             {% endfor %}
+             
+             </div>
+             {% else %}
+                {% if LANGUAGE_CODE == 'en' %}
+                <h4 class="alarm"> You are not logged in  <a href="{% url 'login' %}?next_page={{ request.path|urlencode}}" class="text-dark"> Login </a></h4>
+                {% else %}
+                <h4 class="alarm"> يجب عليك تسجيل الدخول <a href="{% url 'login' %}?next_page={{ request.path|urlencode}}" class="text-dark"> تسجيل الدخول  </a></h4>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+    
+</div> 
+
+</div> 
+          	
+{% endblock content %}
